@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { playPause } from '../../redux/features/playerSlice'
+import { playPause, setActiveSong } from '../../redux/features/playerSlice'
 
 const Player = ({ setDuration, seekTime, setCurrentAudioTime, volume, setVolume, isMuted }) => {
-    const { isPlaying, activeSong } = useSelector(state => state.player)
+    const { isPlaying, activeSong, queue } = useSelector(state => state.player)
 
     
     const dispatch = useDispatch()
@@ -26,8 +26,21 @@ const Player = ({ setDuration, seekTime, setCurrentAudioTime, volume, setVolume,
     useEffect(()=> {
         audioRef.current.volume = volume / 100 //note, the set volume must be between 0 or 1
     }, [volume])
-    
-    
+
+    const nestSong = () => {
+        dispatch(playPause(false))
+        if(queue.length > 1){
+            if (activeSong.index < queue.length-1) {
+                dispatch(setActiveSong(queue[activeSong.index + 1])) 
+                dispatch(playPause(true));
+            }
+            else{
+                dispatch(setActiveSong(queue[0]))
+                dispatch(playPause(true));
+            }
+        } 
+    }
+
     return (
         <div className=''>
             <audio 
@@ -36,7 +49,7 @@ const Player = ({ setDuration, seekTime, setCurrentAudioTime, volume, setVolume,
                 onTimeUpdate={(e) => setCurrentAudioTime(e.target.currentTime)} 
                 ref={audioRef} 
                 onLoadedData={(e) => setDuration(audioRef.current.duration)} 
-                onEnded={(e) => dispatch(playPause(false))} 
+                onEnded={nestSong} 
                 loop={false} 
                 src={activeSong.activeSongAudio}></audio>
         </div>

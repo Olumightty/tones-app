@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { topSongs } from '../assets/topSongs'
 import { FaPlay } from 'react-icons/fa6'
 import { useLocation } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { playPause, setActiveSong } from '../redux/features/playerSlice'
+import { playPause, setActiveSong, setQueue } from '../redux/features/playerSlice'
 import MusicPlaying from './MusicPlaying'
 import { useGetTopSongsQuery } from '../redux/services/apiCore'
 import Loader from './Loader'
@@ -17,13 +17,47 @@ const TopSongs = () => {
   // if(isFetching) return <Loader/>
   // if(error) return <Error/>
   // const topSongs = data
+
+
+  const [playFromTopSong, setPlayFromTopsong] = useState(false)
+  const dispatch = useDispatch()
+
+  // const newQueue = () =>{
+  //   dispatch(setQueue({ //this also will be in tr component
+  //     id: song.id,
+  //     title: song.attributes?.name,
+  //     artist: song.attributes?.artistName,
+  //     audio: song.attributes?.previews[0]?.url,
+  //     artistId: route == 'album' ? artistId : song.relationships?.artists?.data[0]?.id,
+  //     imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
+  //   }))
+  // }
+
+  useEffect(() => {
+    playFromTopSong
+      ? dispatch(setQueue(topSongs.data.map((song, index) => {// dispatch to the queue
+          return {
+            index,
+            id: song.id,
+            title: song.attributes?.name,
+            artist: song.attributes?.artistName,
+            audio: song.attributes?.previews[0]?.url,
+            artistId: id,
+            imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
+          }
+        })))
+      : null
+      setPlayFromTopsong(false)
+  }, [playFromTopSong])
+
+
   return (
     <div className={`w-[70vw] md:w-[57vw] pr-8`}>
       <h1 className='font-Roboto text-xl text-white font-semibold mb-4'>Top Songs</h1>
       <div className='overflow-scroll removeScrollbar grid grid-flow-col grid-rows-3 gap-4 '>
           {
             topSongs.data.map((song, index) => (
-              <SongBlock key={index} song={song} artistid={id}/>
+              <SongBlock setPlayFromTopsong={setPlayFromTopsong} key={index} song={song} artistid={id} index={index}/>
              ))
           }
       </div>
@@ -31,12 +65,14 @@ const TopSongs = () => {
   )
 }
 
-const SongBlock = ({song, artistid}) =>{
+const SongBlock = ({song, artistid, setPlayFromTopsong, index}) =>{
     const dispatch = useDispatch()
     const {activeSong} = useSelector(state => state.player)
     function handlePlayPause(){
+      setPlayFromTopsong(true)
       dispatch(playPause(true))
       dispatch(setActiveSong({
+        index,
         id: song.id,
         title: song?.attributes?.name,
         artist: song?.attributes?.artistName,

@@ -5,6 +5,7 @@ const initialState = {
     isPlaying: false,
     searchTerm: '',
     activeSong:{
+        index: undefined,
         activeSongTitle: undefined,
         activeSongArtist: undefined,
         activeSongAudio: undefined,
@@ -13,8 +14,10 @@ const initialState = {
         imageUrl: undefined,
         
     },
+    queue: [],
     expanded: false,
     windowWidth: undefined,
+
 }
     
 
@@ -32,6 +35,7 @@ const playerSlice = createSlice({
             state.expanded = action.payload
         },
         setActiveSong: (state, action) => {
+            state.activeSong.index = action.payload.index
             state.activeSong.activeSongTitle = action.payload.title
             state.activeSong.activeSongArtist = action.payload.artist
             state.activeSong.activeSongAudio = action.payload.audio
@@ -42,6 +46,9 @@ const playerSlice = createSlice({
         updateWindowWidth: (state, action) => {
             state.windowWidth = action.payload
         },
+        setQueue: (state, action) => {
+            state.queue = action.payload
+        }
     },
 })
 
@@ -52,4 +59,5 @@ export const {
     setActiveSong, 
     expand,
     updateWindowWidth,
+    setQueue,
 } = playerSlice.actions

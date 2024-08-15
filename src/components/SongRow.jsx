@@ -4,26 +4,26 @@ import { useState } from 'react'
 import { setActiveSong, playPause } from '../redux/features/playerSlice'
 import { FaPlay } from 'react-icons/fa6'
 import MusicPlaying from './MusicPlaying'
-import { useLocation } from 'react-router'
 
-const SongRow = ({song, artistId}) => {
-    const {pathname} = useLocation()
-    const [empty, route, id] = pathname.split('/') // in order to get the artistId as it is not in the album data
+const SongRow = ({song, artistId, index, setPlayFromAlbum}) => {
     const minutes = Math.max(0, Math.floor((song.attributes?.durationInMillis)/60000))
     const seconds = Math.max(0, Math.round((song.attributes?.durationInMillis)/1000)%60 )
     const [isHovering, setIsHovering] = useState(false)
     const { activeSong } = useSelector(state => state.player)
     const dispatch = useDispatch()
     function handlePlayPause(){
+        setPlayFromAlbum(true)//this will dispatch the music array into the queue
         dispatch(playPause(true))
         dispatch(setActiveSong({ //this also will be in tr component
-          id: song.id,
-          title: song.attributes?.name,
-          artist: song.attributes?.artistName,
-          audio: song.attributes?.previews[0]?.url,
-          artistId: route == 'album' ? artistId : song.relationships?.artists?.data[0]?.id,
-          imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
+            index,
+            id: song.id,
+            title: song.attributes?.name,
+            artist: song.attributes?.artistName,
+            audio: song.attributes?.previews[0]?.url,
+            artistId: artistId,
+            imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
         }))
+        
       }
   return(
     <tr
