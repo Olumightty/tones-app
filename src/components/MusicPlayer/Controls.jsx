@@ -5,23 +5,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { playPause } from '../../redux/features/playerSlice';
 
 
-const Controls = () => {
+const Controls = ({setRepeat, setShuffle, setGotoNext, setGotoPrev, shuffle, repeat}) => {
     const { isPlaying } = useSelector(state => state.player)
     const dispatch = useDispatch()
   return (
     <div className='flex gap-4'>
-        <FaShuffle color='#EAE1E1' size={20} />
-        <FaStepBackward color='#EAE1E1' size={20} />
+        <FaShuffle onClick={() => setShuffle(!shuffle)} className='cursor-pointer' color={shuffle? '#FFC94A' : '#EAE1E1'} size={20} />
+        <FaStepBackward onClick={() => setGotoPrev(true)} className='cursor-pointer' color='#EAE1E1' size={20} />
         <div>
             {isPlaying 
-                ? <FaPause color='#EAE1E1' onClick={() => dispatch(playPause(false))} size={20} /> 
-                :<FaPlay color='#EAE1E1' onClick={() => dispatch(playPause(true))} size={20} />
+                ? <FaPause className='cursor-pointer' color='#EAE1E1' onClick={() => dispatch(playPause(false))} size={20} /> 
+                :<FaPlay className='cursor-pointer' color='#EAE1E1' onClick={() => dispatch(playPause(true))} size={20} />
             }
             
             
         </div>
-        <FaStepForward color='#EAE1E1' size={20}/>
-        <FaRepeat color='#EAE1E1' size={20} />
+        <FaStepForward onClick={() => setGotoNext(true)} className='cursor-pointer' color='#EAE1E1' size={20}/>
+        <FaRepeat onClick={() => setRepeat(!repeat)} className='cursor-pointer' color={repeat? '#FFC94A' : '#EAE1E1'} size={20} />
     </div>
   )
 }

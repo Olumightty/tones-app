@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { playPause, setActiveSong } from '../../redux/features/playerSlice'
+import { playPause, setActiveSong, setQueue } from '../../redux/features/playerSlice'
 
-const Player = ({ setDuration, seekTime, setCurrentAudioTime, volume, setVolume, isMuted }) => {
+const Player = ({ setDuration, seekTime, setCurrentAudioTime, volume, setVolume, isMuted, repeat, shuffle, gotoNext, gotoPrev, setGotoNext, setGotoPrev }) => {
     const { isPlaying, activeSong, queue } = useSelector(state => state.player)
 
     
@@ -27,19 +27,63 @@ const Player = ({ setDuration, seekTime, setCurrentAudioTime, volume, setVolume,
         audioRef.current.volume = volume / 100 //note, the set volume must be between 0 or 1
     }, [volume])
 
-    const nestSong = () => {
+    useEffect(()=>{
+        if(gotoNext){
+            nextSong()
+            setGotoNext(false)
+
+        }
+        if(gotoPrev){
+            prevSong()
+            setGotoPrev(false)
+        }
+    }, [gotoNext, gotoPrev])
+
+    // const shuffleQueue = () => {
+    //     function shuffleArray(array) {
+    //         for (let i = array.length - 1; i > 0; i--) {
+    //             const j = Math.floor(Math.random() * (i + 1));
+    //             [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    //         }
+    //         return array;
+    //     }
+
+    //     const shuffledQueue = shuffleArray(queue.data)
+    //     dispatch(setQueue())
+        
+    // }
+    const prevSong = () =>{
         dispatch(playPause(false))
-        if(queue.length > 1){
-            if (activeSong.index < queue.length-1) {
-                dispatch(setActiveSong(queue[activeSong.index + 1])) 
-                dispatch(playPause(true));
-            }
-            else{
-                dispatch(setActiveSong(queue[0]))
-                dispatch(playPause(true));
-            }
-        } 
+        if (activeSong.index > 0) {
+            dispatch(setActiveSong(queue.data[activeSong.index - 1])) 
+            dispatch(playPause(true));
+        }
+        else{
+            audioRef.current.load()
+        }
     }
+
+    const nextSong = () => {
+        dispatch(playPause(false))
+        if(shuffle){
+            dispatch(setActiveSong(queue.data[Math.floor(Math.random() * queue.data.length)]))
+            dispatch(playPause(true))
+        }
+        else{
+            if(queue.data.length > 1){
+                if (activeSong.index < queue.data.length-1) {
+                    dispatch(setActiveSong(queue.data[activeSong.index + 1])) 
+                    dispatch(playPause(true));
+                }
+                else{
+                    dispatch(setActiveSong(queue.data[0]))
+                    dispatch(playPause(true));
+                }
+            } 
+        }
+        
+    }
+
 
     return (
         <div className=''>
@@ -49,8 +93,8 @@ const Player = ({ setDuration, seekTime, setCurrentAudioTime, volume, setVolume,
                 onTimeUpdate={(e) => setCurrentAudioTime(e.target.currentTime)} 
                 ref={audioRef} 
                 onLoadedData={(e) => setDuration(audioRef.current.duration)} 
-                onEnded={nestSong} 
-                loop={false} 
+                onEnded={nextSong} 
+                loop={repeat} 
                 src={activeSong.activeSongAudio}></audio>
         </div>
     )

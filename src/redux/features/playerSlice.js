@@ -14,7 +14,10 @@ const initialState = {
         imageUrl: undefined,
         
     },
-    queue: [],
+    queue:{
+        isShowing: false,
+        data: [],
+    },
     expanded: false,
     windowWidth: undefined,
 
@@ -47,7 +50,10 @@ const playerSlice = createSlice({
             state.windowWidth = action.payload
         },
         setQueue: (state, action) => {
-            state.queue = action.payload
+            state.queue.data = action.payload
+        },
+        showQueue:(state, action) => {
+            state.queue.isShowing = action.payload
         }
     },
 })
@@ -60,4 +66,5 @@ export const {
     expand,
     updateWindowWidth,
     setQueue,
+    showQueue,
 } = playerSlice.actions

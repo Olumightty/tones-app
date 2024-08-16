@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router'
 import { useGetSummaryQuery} from '../redux/services/apiCore'
 import Loader from '../components/Loader'
@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import TopSongs from '../components/TopSongs'
 import LatestRelease from '../components/LatestRelease'
 import Discography from '../components/Discography'
-import { playPause, setActiveSong } from '../redux/features/playerSlice'
+import { playPause, setActiveSong, setQueue } from '../redux/features/playerSlice'
 import { IoMdArrowBack } from "react-icons/io"
 import { Link } from 'react-router-dom'
 import { FaPlay } from 'react-icons/fa6'
@@ -22,7 +22,9 @@ const ArtistDetails = () => {
     const { pathname } = useLocation()
     const [empty, route, id] = pathname.split('/')
     const {windowWidth, activeSong} = useSelector(state => state.player)
+    const [playFromSongView, setPlayFromSongView] = useState(false)
     const [songView, setSongView] = useState(false) // to be able to get full song list when user clicks 'See More' button 
+    const dispatch = useDispatch()
 
 
     // const {data, isFetching, error} = useGetSummaryQuery(id)
@@ -42,6 +44,22 @@ const ArtistDetails = () => {
     const songsIds = Object.keys(summary.resources.songs)
     const albumIds = Object.keys(summary.resources.albums)
     //Get array of albumsID and songsID
+    useEffect(() => {
+        playFromSongView
+          ? dispatch(setQueue(songsIds.map((songId, index) => {// dispatch to the queue
+              return {
+                index,
+                id: songId,
+                title: summary.resources?.songs[songId].attributes?.name,
+                artist: summary.resources?.songs[songId].attributes?.artistName,
+                audio: summary.resources?.songs[songId].attributes?.previews[0]?.url,
+                artistId: id,
+                imageUrl: summary.resources?.songs[songId].attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
+              }
+            })))
+          : null
+          setPlayFromSongView(false)
+      }, [playFromSongView])
 
     return (
         <div className={`pt-8 relative overflow-y-scroll h-[76vh]`}>
@@ -72,7 +90,7 @@ const ArtistDetails = () => {
                 :<>
                     
                     <IoMdArrowBack onClick={() => setSongView(false)} color='white' size={20} className='fixed top-10 left-[106px] cursor-pointer'/>
-                    {songsIds.map((songId, index) => <SongBlock song={summary.resources.songs[songId]} key={songId} index={index} artistId={id}/>)}
+                    {songsIds.map((songId, index) => <SongBlock setPlayFromSongView={setPlayFromSongView} song={summary.resources.songs[songId]} key={songId} index={index} artistId={id}/>)}
                 </>
                 
             }
@@ -81,7 +99,7 @@ const ArtistDetails = () => {
     )
 }
 
-const SongBlock = ({song, index, artistId}) => {
+const SongBlock = ({song, index, artistId, setPlayFromSongView}) => {
     //For 'See More' page
     const [isHovering, setIsHovering] = useState(false)
     const { activeSong } = useSelector(state => state.player) //for the song to remain highlighted
@@ -91,8 +109,10 @@ const SongBlock = ({song, index, artistId}) => {
     const imageUrl = song.attributes?.artwork?.url.replace("{w}", 80).replace("{h}", 80)
 
     function handlePlayPause(){
+        setPlayFromSongView(true)
         dispatch(playPause(true))
         dispatch(setActiveSong({
+            index,
             id: song?.id,
             title: song?.attributes?.name,
             artist: song?.attributes?.artistName,
