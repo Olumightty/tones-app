@@ -8,6 +8,8 @@ import MusicPlaying from './MusicPlaying'
 import { useGetTopSongsQuery } from '../redux/services/apiCore'
 import Loader from './Loader'
 import Error from './Error'
+import { Ellipsis } from 'lucide-react'
+import MiniMenu from './MiniMenu'
 
 const TopSongs = () => {
   const { pathname } = useLocation()
@@ -67,22 +69,26 @@ const TopSongs = () => {
 
 const SongBlock = ({song, artistid, setPlayFromTopsong, index}) =>{
     const dispatch = useDispatch()
-    const {activeSong} = useSelector(state => state.player)
-    function handlePlayPause(){
-      setPlayFromTopsong(true)
-      dispatch(playPause(true))
-      dispatch(setActiveSong({
-        index,
-        id: song.id,
-        title: song?.attributes?.name,
-        artist: song?.attributes?.artistName,
-        audio: song?.attributes?.previews[0]?.url,
-        artistId: artistid,
-        imageUrl: imageUrl,
-      }))
-    }
+    const {activeSong, queue} = useSelector(state => state.player)
     const [isHovering, setIsHovering] = useState(false)
     const imageUrl = song.attributes?.artwork?.url.replace("{w}", 50).replace("{h}", 50)
+    
+    const songToAdd = {
+      index,
+      id: song.id,
+      title: song?.attributes?.name,
+      artist: song?.attributes?.artistName,
+      audio: song?.attributes?.previews[0]?.url,
+      artistId: artistid,
+      imageUrl: imageUrl,
+    }
+
+    function handlePlayPause(song){
+      setPlayFromTopsong(true)
+      dispatch(playPause(true))
+      dispatch(setActiveSong(song))
+    }
+    
     return (
         <div 
           onMouseOver={() => setIsHovering(true)} 
@@ -91,14 +97,15 @@ const SongBlock = ({song, artistid, setPlayFromTopsong, index}) =>{
         >
             <img src={imageUrl} alt="" />
             <div>
-                <h1 className='font-Poppins text-sm font-semibold text-grey '>{song?.attributes?.name}</h1>
+                <h1 className='font-Poppins text-sm font-semibold text-grey text-ellipsis text-nowrap overflow-hidden max-w-[180px]'>{song?.attributes?.name}</h1>
                 <p className='font-Poppins text-xs text-grey'>{song?.attributes?.artistName}</p>
             </div>
             {song.id == activeSong.activeSongId
               ? <div className='absolute left-4 cursor-pointer'><MusicPlaying/></div>
               : isHovering &&
-                <FaPlay onClick={handlePlayPause} className='absolute left-4 cursor-pointer' color='#FFC94A' size={20}/>
+                <FaPlay onClick={() => handlePlayPause(songToAdd)} className='absolute left-4 cursor-pointer' color='#FFC94A' size={20}/>
             }
+            <MiniMenu song={songToAdd}/>
         </div>
     )
 }

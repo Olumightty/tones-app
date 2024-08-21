@@ -20,6 +20,7 @@ const initialState = {
     },
     expanded: false,
     windowWidth: undefined,
+    isShuffling: false,
 
 }
     
@@ -51,10 +52,14 @@ const playerSlice = createSlice({
         },
         setQueue: (state, action) => {
             state.queue.data = action.payload
+
         },
         showQueue:(state, action) => {
             state.queue.isShowing = action.payload
-        }
+        },
+        setShuffle: (state, action) => {
+            state.isShuffling= action.payload
+        },
     },
 })
 
@@ -67,4 +72,5 @@ export const {
     updateWindowWidth,
     setQueue,
     showQueue,
+    setShuffle,
 } = playerSlice.actions

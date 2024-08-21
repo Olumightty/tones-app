@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { setActiveSong, playPause } from '../redux/features/playerSlice'
 import { FaPlay } from 'react-icons/fa6'
 import MusicPlaying from './MusicPlaying'
+import { TableCell, TableRow } from './ui/table'
+import MiniMenu from './MiniMenu'
 
 const SongRow = ({song, artistId, index, setPlayFromAlbum}) => {
     const minutes = Math.max(0, Math.floor((song.attributes?.durationInMillis)/60000))
@@ -11,42 +13,47 @@ const SongRow = ({song, artistId, index, setPlayFromAlbum}) => {
     const [isHovering, setIsHovering] = useState(false)
     const { activeSong } = useSelector(state => state.player)
     const dispatch = useDispatch()
-    function handlePlayPause(){
+    
+    const songToAdd = {
+        index,
+        id: song.id,
+        title: song.attributes?.name,
+        artist: song.attributes?.artistName,
+        audio: song.attributes?.previews[0]?.url,
+        artistId: artistId,
+        imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
+    }
+    function handlePlayPause(song){
         setPlayFromAlbum(true)//this will dispatch the music array into the queue
         dispatch(playPause(true))
-        dispatch(setActiveSong({ //this also will be in tr component
-            index,
-            id: song.id,
-            title: song.attributes?.name,
-            artist: song.attributes?.artistName,
-            audio: song.attributes?.previews[0]?.url,
-            artistId: artistId,
-            imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
-        }))
+        dispatch(setActiveSong(song))
         
       }
   return(
-    <tr
+    <TableRow
         onMouseOver={() => setIsHovering(true)} 
         onMouseLeave={() => setIsHovering(false)} 
-        className={`h-[100px]  cursor-pointer hover:bg-navy ${activeSong.activeSongId == song.attributes?.playParams?.id && 'bg-navy'}`}
+        className={`h-[100px] border-none cursor-pointer hover:bg-navy ${activeSong.activeSongId == song.attributes?.playParams?.id && 'bg-navy'}`}
     >
-        <td className='pl-2 pr-2 w-[5%]'>
+        <TableCell className=' text-grey font-Poppins font-semibold'>
             {activeSong.activeSongId == song.attributes?.playParams?.id
                 ? <MusicPlaying/>
                 : isHovering 
-                    ? <FaPlay onClick={handlePlayPause}  color='white'/>
+                    ? <FaPlay onClick={() => handlePlayPause(songToAdd)}  color='white'/>
                     : song.attributes?.trackNumber
                 }
-        </td>
-        <td className=''>
-            <p className='text-white max-w-[80px]  sm:max-w-[150px] lg:max-w-[350px] md:max-w-[200px] lg:w-[300px]  lg:text-wrap overflow-hidden text-nowrap text-ellipsis'>{song.attributes?.name}</p>
-            <span>{song.attributes?.artistName}</span>
-        </td>
-        <td className='w-[25%] es:max-w-[50px]   md:text-wrap md:w-[25%] overflow-hidden text-ellipsis text-nowrap'>{song.attributes?.albumName}</td>
-        <td className='w-[25%] es:max-w-[50px]  md:text-wrap md:w-[25%] overflow-hidden text-ellipsis text-nowrap'>{song.attributes?.genreNames[0]}</td>
-        <td className='text-right w-[5%]'>{`${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`}</td>
-    </tr>
+        </TableCell>
+        <TableCell className=''>
+            <p className='text-white font-Poppins font-bold text-md max-w-[150px]  sm:max-w-[150px] lg:max-w-[350px] md:max-w-[200px] lg:w-[300px]  lg:text-wrap overflow-hidden text-nowrap text-ellipsis '>{song.attributes?.name}</p>
+            <span className='text-grey font-Poppins font-semibold'>{song.attributes?.artistName}</span>
+        </TableCell>
+        <TableCell className='md:text-wrap overflow-hidden text-ellipsis text-nowrap text-grey font-Poppins font-semibold max-sm:max-w-[100px] max-xs:hidden'>{song.attributes?.albumName}</TableCell>
+        <TableCell className='md:text-wrap overflow-hidden text-ellipsis text-nowrap text-grey font-Poppins font-semibold max-sm:hidden '>{song.attributes?.genreNames[0]}</TableCell>
+        <TableCell className=' text-grey font-Poppins font-semibold'>{`${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`}</TableCell>
+        <div className='absolute'>
+            <MiniMenu song={songToAdd}/>
+        </div>
+    </TableRow>
   )
 }
 

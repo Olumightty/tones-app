@@ -1,14 +1,11 @@
-import React, { act, useEffect, useState } from 'react'
+import React from 'react'
 import {active}  from '../assets/active'
 import { useGetSongQuery } from '../redux/services/apiCore'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import Loader from '../components/Loader'
-import SongRow from '../components/SongRow'
-import { Clock10 } from 'lucide-react'
 import Error from '../components/Error'
-import { useDispatch } from 'react-redux'
-import { setQueue } from '../redux/features/playerSlice'
+import { Table } from '@/components/Table'
 
 const SongDetails = () => {
   const { pathname } = useLocation()
@@ -45,58 +42,6 @@ const SongDetails = () => {
         </section>
       </div>
     </div>
-  )
-}
-
-export const Table = ({songs, artistId}) =>{
-  const [playFromAlbum, setPlayFromAlbum] = useState(false)
-  const dispatch = useDispatch()
-
-  // const newQueue = () =>{
-  //   dispatch(setQueue({ //this also will be in tr component
-  //     id: song.id,
-  //     title: song.attributes?.name,
-  //     artist: song.attributes?.artistName,
-  //     audio: song.attributes?.previews[0]?.url,
-  //     artistId: route == 'album' ? artistId : song.relationships?.artists?.data[0]?.id,
-  //     imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
-  //   }))
-  // }
-
-  useEffect(() => {
-    playFromAlbum
-      ? dispatch(setQueue(songs.map((song, index) => {
-          return {
-            index,
-            id: song.id,
-            title: song.attributes?.name,
-            artist: song.attributes?.artistName,
-            audio: song.attributes?.previews[0]?.url,
-            artistId: artistId,
-            imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
-          }
-        })))
-      : null
-      setPlayFromAlbum(false)
-  }, [playFromAlbum])
-  
-  return(
-    <table className='table-fixed ss:w-full  h-fit mb-4 overflow-scroll md:w-full'>
-      <thead className='text-left font-semibold font-Roboto text-gold border-b-2 border-grey h-10 block'>
-        <tr>
-          <th className='w-[5%] pl-2'>#</th>
-          <th className='w-[40%]  lg:min-w-[300px]'>Song Title</th>
-          <th className='w-[25%]'>Album</th>
-          <th className='w-[25%]'>Genre</th>
-          <th className='w-[5%] pl-[18.5px]'><Clock10 /></th>
-        </tr>
-      </thead>
-      <tbody className='font-Roboto text-grey font-semibold overflow-scroll removeScrollbar h-[38vh] md:h-[68vh] block'>
-          {songs.map((song, index) => <SongRow setPlayFromAlbum={setPlayFromAlbum} artistId={artistId} key={index} song={song} index={index}/>)}
-      </tbody>
-    </table>
-          
-
   )
 }
 

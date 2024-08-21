@@ -2,14 +2,14 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ChevronDown, CircleX } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { ChevronUp } from 'lucide-react'
-import { showQueue, updateWindowWidth } from '../redux/features/playerSlice'
+import { setQueue, showQueue, updateWindowWidth } from '../redux/features/playerSlice'
+import QueueSong from './QueueSong'
 
 const RightBar = () => {
     const dispatch = useDispatch()
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const {queue} = useSelector(state => state.player)
+    const {queue, isShuffling} = useSelector(state => state.player)
 
     useEffect(() => {
         // Function to update window width state
@@ -27,15 +27,49 @@ const RightBar = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-    const {activeSong} = useSelector((state) => state.player)
+    const { queue: {data}, activeSong } = useSelector((state) => state.player)
+    
+    const upNext = data.filter((song) => song.index > activeSong.index)
+
+    const deleteFromQueue = (id) => {
+        const updatedQueue = data.filter((song) => song.id != id)
+
+        dispatch(setQueue(updatedQueue.map((song, index) => {// dispatch to the queue
+            return {
+              index,
+              id: song.id,
+              title: song.title,
+              artist: song.artist,
+              audio: song.audio,
+              artistId: song.artistId,
+              imageUrl: song.imageUrl,
+            }
+          })))
+    }
+    
   return (
+    
     <>
-        {activeSong.activeSongId && queue.isShowing &&
+        {queue.isShowing &&
             <aside className={`bg-gradientNavy w-[300px] p-2 right-2 transition-all rounded-xl absolute top-2  h-[85vh]`}>
                 <CircleX className='cursor-pointer absolute right-2 top-2' onClick={() => dispatch(showQueue(false))} color='#FFC94A'/>
-                <div className='flex'>
-                    <img className='w-[180px] self-center rounded-full' src="https://is1-ssl.mzstatic.com/image/thumb/Features126/v4/d6/3d/2a/d63d2a28-7a81-d532-0f00-7d0f35a4eaa2/mza_4715395746223917563.png/800x800bb.jpg" alt="" />
-                </div>
+                <h1 className='font-Poppins text-14 text-gold font-semibold mt-3 pl-2 mb-3'>Up Next</h1>
+                <section className='flex flex-col gap-4 h-[75vh] overflow-scroll removeScrollbar cursor-pointer'>
+                    {!isShuffling?
+                    
+                    upNext.length > 0
+                        ?upNext.map((song) =>
+                            <QueueSong deleteFromQueue={deleteFromQueue} song={song}/> 
+                        )
+                        : <h1 className='font-Roboto text-grey text-[50px] text-center flex justify-center items-center h-[100%] opacity-30'>
+                            No songs in queue, add songs to queue now!
+                        </h1>
+                    : <h1 className='font-Roboto text-grey text-[50px] text-center flex justify-center items-center h-[100%] opacity-30'>
+                            Shuffle is on, It's a suprise!
+                        </h1>
+                    }
+                </section>
+                
             </aside>
             
         }

@@ -16,6 +16,7 @@ import { FaPlay } from 'react-icons/fa6'
 import MusicPlaying from '../components/MusicPlaying'
 import EditorialNotes from '../components/EditorialNotes'
 import Error from '../components/Error'
+import MiniMenu from '@/components/MiniMenu'
 
 
 const ArtistDetails = () => {
@@ -108,18 +109,20 @@ const SongBlock = ({song, index, artistId, setPlayFromSongView}) => {
     const dispatch = useDispatch()
     const imageUrl = song.attributes?.artwork?.url.replace("{w}", 80).replace("{h}", 80)
 
-    function handlePlayPause(){
+    const songToAdd = {
+        index,
+        id: song?.id,
+        title: song?.attributes?.name,
+        artist: song?.attributes?.artistName,
+        audio: song?.attributes?.previews[0]?.url,
+        artistId: artistId,
+        imageUrl: imageUrl,
+    }
+
+    function handlePlayPause(song){
         setPlayFromSongView(true)
         dispatch(playPause(true))
-        dispatch(setActiveSong({
-            index,
-            id: song?.id,
-            title: song?.attributes?.name,
-            artist: song?.attributes?.artistName,
-            audio: song?.attributes?.previews[0]?.url,
-            artistId: artistId,
-            imageUrl: imageUrl,
-        }))
+        dispatch(setActiveSong(song))
         //   console.log(data)
     }
     
@@ -127,21 +130,25 @@ const SongBlock = ({song, index, artistId, setPlayFromSongView}) => {
         <div 
             onMouseOver={() => setIsHovering(true)} 
             onMouseLeave={() => setIsHovering(false)} 
-            className={` grid grid-cols-2 sm:grid-cols-9 gap-0 md:gap-4 font-Roboto text-grey font-semibold justify-center  text-lg items-center mb-4 mt-4 cursor-pointer hover:bg-navy px-2 sm:px-4 py-2 ${activeSong.activeSongId == song.id && 'bg-navy'}`}
+            className={`relative max-w-[calc(100vw-100px)] flex justify-around sm:grid grid-cols-2 sm:grid-cols-9 gap-0 md:gap-4 font-Roboto text-grey font-semibold sm:justify-center  text-lg items-center mb-4 mt-4 cursor-pointer hover:bg-navy px-2 sm:px-4 py-2 ${activeSong.activeSongId == song.id && 'bg-navy'}`}
         >
-            <div className='flex col-span-1 gap-8 sm:gap-2 md:gap-8 sm:col-span-4 items-center'>
+            <div className=' flex col-span-1 gap-8 sm:gap-2 md:gap-8 sm:col-span-4 items-center max-sm:w-[200px]'>
                 <div className='w-6'>
                     {activeSong.activeSongId == song?.id
                         ? <MusicPlaying/>
                         : isHovering 
-                            ? <FaPlay onClick={handlePlayPause} color='white'/>
+                            ? <FaPlay onClick={() => handlePlayPause(songToAdd)} color='white'/>
                             : <span className='text-white font-Poppins font-bold text-lg'>{index +1}</span>
                     }
                 </div>
                 <div className='flex items-center gap-4'>
                     <img className='w-[80px] sm:w-[50px] rounded-lg md:w-[80px]' src={imageUrl} alt="" />
                     <div>
-                        <p className='text-white font-Poppins font-bold text-lg hover:text-gold w-[250px]  sm:w-[200px] sm:text-nowrap  md:w-[200px] lg:w-fit lg:text-wrap sm:overflow-hidden text-ellipsis'><Link to={`/song/${song?.id}`}>{song?.attributes?.name}</Link></p>
+                        <p className='text-white font-Poppins font-bold text-lg hover:text-gold w-[150px]  sm:w-[200px] text-nowrap  md:w-[200px] lg:w-fit lg:text-wrap overflow-hidden text-ellipsis'>
+                            <Link to={`/song/${song?.id}`}>
+                                {song?.attributes?.name}
+                            </Link>
+                        </p>
                         <p className='text-grey text-base font-Poppins hover:text-purpleish w-[100px] md:w-fit md:text-wrap overflow-hidden text-ellipsis text-nowrap'><Link to={`/artist/${artistId}`}>{song?.attributes?.artistName}</Link></p>
                     </div>
                 </div>
@@ -149,6 +156,7 @@ const SongBlock = ({song, index, artistId, setPlayFromSongView}) => {
             <p className='gap-8 sm:col-span-2 w-0 sm:w-[100px] md:w-fit md:text-wrap overflow-hidden text-ellipsis text-nowrap'>{song?.attributes?.albumName}</p>
             <p className='gap-8 sm:col-span-2 w-0 sm:w-[100px] md:w-fit md:text-wrap overflow-hidden text-ellipsis text-nowrap'>{song.attributes?.genreNames[0]}</p>
             <p className='w-0 overflow-hidden sm:w-[100px]'>{`${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`}</p>
+            <MiniMenu song={songToAdd}/>
         </div>
     )
     
