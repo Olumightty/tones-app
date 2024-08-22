@@ -101,7 +101,7 @@ const SongBlock = ({song, artistid, setPlayFromTopsong, index}) =>{
             <img src={imageUrl} alt="" />
             <div>
                 <h1 className='font-Poppins text-sm font-semibold text-grey text-ellipsis text-nowrap overflow-hidden max-w-[180px]'>{song?.attributes?.name}</h1>
-                <p className='font-Poppins text-xs text-grey'>{song?.attributes?.artistName}</p>
+                <p className='font-Poppins text-xs text-grey text-ellipsis text-nowrap overflow-hidden max-w-[180px]'>{song?.attributes?.artistName}</p>
             </div>
             {song.id == activeSong.activeSongId
               ? <div className='absolute left-4 cursor-pointer'><MusicPlaying/></div>
