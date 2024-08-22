@@ -16,15 +16,15 @@ const SeekBar = ({ duration, setSeekTime, currentAudioTime }) => {
   //This is to ensure that during calculation of remaining minutes and seconds, it will not fall below 0
   return (
     <div className='flex items-center gap-2'>
-      <span className='font-Roboto text-dullWhite'>{`${currentMinutes < 10 ? '0' + currentMinutes : currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}`}</span>
+      <span className='font-Roboto text-dullWhite text-[12px] sm:text-[16px]'>{`${currentMinutes < 10 ? '0' + currentMinutes : currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}`}</span>
       <input 
         ref={seekRef} 
-        className='p-0 h-1 lg:w-[500px] sm:w-[350px]'
+        className='p-0 h-1 max-md:max-w-[200px] lg:w-[500px] sm:w-[350px]'
         type="range" 
         min={0} 
         max={duration} 
         onInput={(e) => setSeekTime(e.target.value)}  />
-      <span className='font-Roboto text-dullWhite'>{`${remainingMinutes < 10 ? '0' + remainingMinutes : remainingMinutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`}</span>
+      <span className='font-Roboto text-dullWhite text-[12px] sm:text-[16px]'>{`${remainingMinutes < 10 ? '0' + remainingMinutes : remainingMinutes}:${remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}`}</span>
     </div>
     
   )

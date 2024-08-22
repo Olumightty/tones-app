@@ -12,7 +12,7 @@ const MusicPlayer = () => {
   const [duration, setDuration] = useState(0)
   const [seekTime, setSeekTime] = useState(0)
   const [currentAudioTime, setCurrentAudioTime] = useState(0)
-  const [volume, setVolume] = useState(30)
+  const [volume, setVolume] = useState(100)
   const [isMuted, setIsMuted] = useState(false)
   const [gotoNext, setGotoNext] = useState(false)
   const [gotoPrev, setGotoPrev] = useState(false)
@@ -21,7 +21,9 @@ const MusicPlayer = () => {
   const dispatch = useDispatch()
   const {queue} = useSelector(state => state.player)
   return (
-    <div className='grid grid-cols-6 h-[10vh] items-center absolute bottom-0 px-4 py-2 w-full box-border rounded-xl bg-gradientPurple'>
+    <div 
+      className='grid grid-cols-6 h-[10vh] items-center absolute bottom-0 px-4 py-2 w-full box-border rounded-lg bg-gradientPurple max-w-[calc(100vw-85px)]'
+    >
         <TrackInfo/>
         <div className='flex flex-col items-center col-span-4'>
           <Controls

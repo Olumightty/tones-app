@@ -30,7 +30,10 @@ const MiniMenu = ({song}) => {
             <DropdownMenuLabel className='text-grey font-Roboto'>Menu</DropdownMenuLabel>
             <DropdownMenuSeparator className='bg-grey' />
             <DropdownMenuItem className='hover:bg-gradientMain cursor-pointer' onClick={() => addToQueue(song)}>
-              <MiniMenuButtons>
+              <MiniMenuButtons
+                songName={song.title}
+                where={'queue'}
+              >
                 Add to queue
               </MiniMenuButtons>
             </DropdownMenuItem >

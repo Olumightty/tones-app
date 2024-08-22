@@ -3,7 +3,7 @@ import { useLocation } from 'react-router'
 import { useGetSummaryQuery} from '../redux/services/apiCore'
 import Loader from '../components/Loader'
 import { data } from '../assets/dataart'
-import { FaPlayCircle } from "react-icons/fa";
+import { FaPauseCircle, FaPlayCircle } from "react-icons/fa";
 import { summary } from '../assets/summary'
 import { useSelector, useDispatch } from 'react-redux'
 import TopSongs from '../components/TopSongs'
@@ -12,39 +12,21 @@ import Discography from '../components/Discography'
 import { playPause, setActiveSong, setQueue } from '../redux/features/playerSlice'
 import { IoMdArrowBack } from "react-icons/io"
 import { Link } from 'react-router-dom'
-import { FaPlay } from 'react-icons/fa6'
 import MusicPlaying from '../components/MusicPlaying'
 import EditorialNotes from '../components/EditorialNotes'
 import Error from '../components/Error'
 import MiniMenu from '@/components/MiniMenu'
+import { FaPlay } from 'react-icons/fa6'
 
 
 const ArtistDetails = () => {
     const { pathname } = useLocation()
     const [empty, route, id] = pathname.split('/')
-    const {windowWidth, activeSong} = useSelector(state => state.player)
+    const {activeSong, queue, isPlaying} = useSelector(state => state.player)
     const [playFromSongView, setPlayFromSongView] = useState(false)
     const [songView, setSongView] = useState(false) // to be able to get full song list when user clicks 'See More' button 
     const dispatch = useDispatch()
 
-
-    // const {data, isFetching, error} = useGetSummaryQuery(id)
-
-    // if(isFetching) return <Loader/>
-
-    // if(error) return <Error/>
-
-    // const summary = data 
-
-    //Picture on click, editoral note will be a modal 
-    //Top songs
-    //Latest release
-    //Tabs for songs albums
-    //Create a modal for artis editoral notes
-    const artistID = Object.keys(summary.resources.artists)[0]
-    const songsIds = Object.keys(summary.resources.songs)
-    const albumIds = Object.keys(summary.resources.albums)
-    //Get array of albumsID and songsID
     useEffect(() => {
         playFromSongView
           ? dispatch(setQueue(songsIds.map((songId, index) => {// dispatch to the queue
@@ -59,20 +41,63 @@ const ArtistDetails = () => {
               }
             })))
           : null
-          setPlayFromSongView(false)
-      }, [playFromSongView])
+        setPlayFromSongView(false)
+    }, [playFromSongView])
+
+
+    const {data, isFetching, error} = useGetSummaryQuery(id)
+
+    if(isFetching) return <Loader/>
+
+    if(error) return <Error/>
+
+    const summary = data 
+
+    //Picture on click, editoral note will be a modal 
+    //Top songs
+    //Latest release
+    //Tabs for songs albums
+    //Create a modal for artis editoral notes
+    const artistID = Object.keys(summary.resources.artists)[0]
+    const songsIds = Object.keys(summary.resources.songs)// in order to get the keys for each song and album
+    const albumIds = Object.keys(summary.resources.albums)
+    //Get array of albumsID and songsID
+    
+
+    const playArtist = () => {
+      setPlayFromSongView(true)
+      dispatch(setActiveSong(queue.data[0]))
+      dispatch(playPause(true))
+    }
 
     return (
-        <div className={`pt-8 relative overflow-y-scroll h-[76vh]`}>
+        <div className={`pt-8 relative overflow-y-scroll vertical-scroll h-[76vh] max-w-[calc(100vw-85px)]`}>
             {!songView
                 ? <>
 
                     <div className='flex gap-8 bg-gradientTransparent flex-col-reverse sm:flex-row px-8 items-baseline pb-4 justify-between'>
                         <section className='flex  items-center'>
-                            <button className='mr-4'><FaPlayCircle color='#758694' className='border-gold bg-gold border-2 rounded-full' size={50} /></button>
+                            <button className='mr-4'>
+                                {
+                                    activeSong.activeArtistId == id && isPlaying
+                                    ? <FaPauseCircle
+                                        onClick={() => dispatch(playPause(false))} 
+                                        color='#758694' 
+                                        className='border-gold bg-gold border-2 rounded-[50%]' 
+                                        size={50} 
+                                      /> 
+                                    : <FaPlayCircle 
+                                        onClick={playArtist} 
+                                        color='#758694' 
+                                        className='border-gold bg-gold border-2 rounded-[50%]' 
+                                        size={50} 
+                                    />                                  
+                                }
+
+                            </button>
                             <h1 className='font-Poppins text-3xl font-semibold text-white '>{summary.resources.artists[artistID].attributes.name}</h1>
                         </section>
-                        <img className='rounded-full w-[150px] sm:w-[200px] ' src={summary.resources.artists[artistID].attributes.artwork.url.replace("{w}", "200").replace("{h}", "200")} alt="" />
+                        <img className='rounded-[50%] w-[150px] sm:w-[200px] ' src={summary.resources.artists[artistID].attributes.artwork.url.replace("{w}", "200").replace("{h}", "200")} alt="" />
                     </div>
                     <div className='px-8 pt-8 bg-gradientMain'>
                         <div className='flex gap-8 flex-col justify-between  md:flex-row  '>

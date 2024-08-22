@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { useGetAlbumQuery } from '../redux/services/apiCore'
 import Loader from '../components/Loader'
@@ -10,11 +10,11 @@ import Error from '../components/Error'
 const Album = () => {
     const {pathname} = useLocation()
     const term = pathname.split('/')[2]
-    // const {data, isFetching, error} = useGetAlbumQuery(term)
-    // if(isFetching) return  <Loader/>
-    // if(error) return <Error/>
-    // console.log(data)
-    // const album = data
+    
+    const {data, isFetching, error} = useGetAlbumQuery(term)
+    if(isFetching) return  <Loader/>
+    if(error) return <Error/>
+    const album = data
     const imageUrl = album.data[0]?.attributes?.artwork?.url.replace("{w}", 300).replace("{h}", 300)
  
     return (

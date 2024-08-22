@@ -13,11 +13,11 @@ const ReturnSearch = () => {
     const { pathname } = useLocation()
     const term = pathname.split('/')[2]
 
-    // const {data, isFetching, error} = useGetSearchQuery(term)
+    const {data, isFetching, error} = useGetSearchQuery(term)
 
-    // if(isFetching) return <Loader/>
+    if(isFetching) return <Loader/>
 
-    // if(error) return <Error/>
+    if(error) return <Error/>
     
     
     return (

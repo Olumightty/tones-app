@@ -9,7 +9,7 @@ const VolumeBar = ({ volume, setVolume, isMuted, setIsMuted}) => {
     volumeBarRef.current.value = volume
   }, [volume])
   return (
-    <div className='flex items-center'>
+    <div className='flex items-center max-sm:hidden'>
       <div onClick={() => setIsMuted(!isMuted)} className='flex justify-center w-[35px]'>
         {isMuted 
           ? <FaVolumeMute color='#EAE1E1' size={25} />
@@ -24,7 +24,7 @@ const VolumeBar = ({ volume, setVolume, isMuted, setIsMuted}) => {
         type="range" 
         min={0} max={100} 
         ref={volumeBarRef}
-        className='p-0 h-[2px] w-[50px]'
+        className='p-0 h-[2px] w-[100px]'
         onInput={(e) => setVolume(e.target.value)} />
     </div>
     

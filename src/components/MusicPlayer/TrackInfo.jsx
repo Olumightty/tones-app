@@ -10,7 +10,7 @@ const TrackInfo = () => {
   return (
     <div className='flex gap-2 items-center'>
       <div className='flex justify-center w-[60px] items-center'>
-        <img className={`${isPlaying ? 'animate-disc-spin' : null} rounded-full w-[60px] `} src={activeSong.activeSongId ?activeSong.imageUrl : svg} alt="Album Art" />
+        <img className={`${isPlaying ? 'animate-disc-spin' : null} rounded-[50%] w-[60px] `} src={activeSong.activeSongId ?activeSong.imageUrl : svg} alt="Album Art" />
       </div>
       {
         activeSong.activeSongId &&

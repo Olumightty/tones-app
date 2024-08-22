@@ -9,11 +9,11 @@ const LatestRelease = () => {
 
   const { pathname } = useLocation()
   const [empty, route, id] = pathname.split('/')
-  // const {data, isFetching, error} = useGetLatestReleaseQuery(id)
+  const {data, isFetching, error} = useGetLatestReleaseQuery(id)
 
-  // if(isFetching) return <Loader/>
-  // if(error) return <Error/>
-  // const latestRelease = data
+  if(isFetching) return <Loader/>
+  if(error) return <Error/>
+  const latestRelease = data
   return (
     <div className=''> 
       <h1 className='font-Roboto text-xl text-white font-semibold mb-4'>Latest Release</h1>

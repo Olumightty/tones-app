@@ -14,26 +14,9 @@ import MiniMenu from './MiniMenu'
 const TopSongs = () => {
   const { pathname } = useLocation()
   const [empty, route, id]= pathname.split('/')
-  // const {data, isFetching, error} = useGetTopSongsQuery(id)
-
-  // if(isFetching) return <Loader/>
-  // if(error) return <Error/>
-  // const topSongs = data
-
-
+  const {data, isFetching, error} = useGetTopSongsQuery(id)
   const [playFromTopSong, setPlayFromTopsong] = useState(false)
   const dispatch = useDispatch()
-
-  // const newQueue = () =>{
-  //   dispatch(setQueue({ //this also will be in tr component
-  //     id: song.id,
-  //     title: song.attributes?.name,
-  //     artist: song.attributes?.artistName,
-  //     audio: song.attributes?.previews[0]?.url,
-  //     artistId: route == 'album' ? artistId : song.relationships?.artists?.data[0]?.id,
-  //     imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
-  //   }))
-  // }
 
   useEffect(() => {
     playFromTopSong
@@ -51,6 +34,26 @@ const TopSongs = () => {
       : null
       setPlayFromTopsong(false)
   }, [playFromTopSong])
+
+  if(isFetching) return <Loader/>
+  if(error) return <Error/>
+  const topSongs = data
+
+
+  
+
+  // const newQueue = () =>{
+  //   dispatch(setQueue({ //this also will be in tr component
+  //     id: song.id,
+  //     title: song.attributes?.name,
+  //     artist: song.attributes?.artistName,
+  //     audio: song.attributes?.previews[0]?.url,
+  //     artistId: route == 'album' ? artistId : song.relationships?.artists?.data[0]?.id,
+  //     imageUrl: song.attributes?.artwork?.url.replace("{w}", "400").replace("{h}", "400"),
+  //   }))
+  // }
+
+  
 
 
   return (

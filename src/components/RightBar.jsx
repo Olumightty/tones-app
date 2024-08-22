@@ -51,20 +51,20 @@ const RightBar = () => {
     
     <>
         {queue.isShowing &&
-            <aside className={`bg-gradientNavy w-[300px] p-2 right-2 transition-all rounded-xl absolute top-2  h-[85vh]`}>
+            <aside className={`bg-gradientNavy w-[250px] sm:w-[300px] p-2 right-2 transition-all rounded-lg absolute bottom-[14vh] h-[50vh] sm:h-[85vh]`}>
                 <CircleX className='cursor-pointer absolute right-2 top-2' onClick={() => dispatch(showQueue(false))} color='#FFC94A'/>
                 <h1 className='font-Poppins text-14 text-gold font-semibold mt-3 pl-2 mb-3'>Up Next</h1>
-                <section className='flex flex-col gap-4 h-[75vh] overflow-scroll removeScrollbar cursor-pointer'>
+                <section className='flex flex-col gap-4 h-[88%] overflow-scroll removeScrollbar cursor-pointer'>
                     {!isShuffling?
                     
                     upNext.length > 0
                         ?upNext.map((song) =>
                             <QueueSong deleteFromQueue={deleteFromQueue} song={song}/> 
                         )
-                        : <h1 className='font-Roboto text-grey text-[50px] text-center flex justify-center items-center h-[100%] opacity-30'>
+                        : <h1 className='font-Roboto text-grey text-[35px] sm:text-[50px] text-center flex justify-center items-center opacity-30'>
                             No songs in queue, add songs to queue now!
                         </h1>
-                    : <h1 className='font-Roboto text-grey text-[50px] text-center flex justify-center items-center h-[100%] opacity-30'>
+                    : <h1 className='font-Roboto text-grey text-[35px] sm:text-[50px] text-center flex justify-center items-center opacity-30'>
                             Shuffle is on, It's a suprise!
                         </h1>
                     }

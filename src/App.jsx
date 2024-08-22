@@ -7,6 +7,7 @@ import SideBar from './components/SideBar'
 import { Outlet } from 'react-router'
 import { useDispatch } from 'react-redux'
 import { expand } from './redux/features/playerSlice'
+import { Toaster } from 'sonner'
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
       </div>
       <RightBar/>
 
-      
+      <Toaster duration={2000} theme='dark' className='mb-10 bg-navy'/>
     </div>
   )
 }
