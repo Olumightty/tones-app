@@ -18,7 +18,7 @@ const Album = () => {
     const imageUrl = album.data[0]?.attributes?.artwork?.url.replace("{w}", 300).replace("{h}", 300)
  
     return (
-    <div className='px-8 pt-8 w-[calc(100vw-100px)] overflow-scroll h-[78vh] vertical-scroll overflow-x-hidden'>
+    <div className='px-4 sm:px-8 pt-8 w-[calc(100vw-100px)] overflow-scroll h-[78vh] vertical-scroll overflow-x-hidden'>
         <div className='flex flex-col md:flex-row gap-4'>
             <div className='w-[200px] md:w-[300px] flex-col xs:flex-row gap-4 md:flex-col md:max-h-fit md:mr-24'>
                 <div className='flex w-[200px]  items-start'>

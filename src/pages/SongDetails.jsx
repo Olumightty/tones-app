@@ -20,8 +20,8 @@ const SongDetails = () => {
   const imageUrl = active.data[0]?.attributes?.artwork?.url.replace("{w}", "300").replace("{h}", "300")
   
   return (
-    <div className='px-8 pt-8'>
-      <div className='flex gap-4'>
+    <div className='px-4 sm:px-8 pt-8 overflow-scroll h-[75vh]'>
+      <div className='flex flex-col sm:flex-row gap-4'>
         <section>
           <div className='flex items-center '>
             <img className='rounded-xl max-w-[200px] md:max-w-[300px]' src={imageUrl} alt={active.data[0]?.attributes?.name} />

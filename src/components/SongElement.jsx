@@ -37,7 +37,7 @@ const SongElement = ({index, track}) => {
   return (
     <div 
       onMouseOver={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)} 
-      className={`w-[calc(100vw-100px)] flex items-center relative gap-8 mb-4 mt-4 cursor-pointer hover:bg-navy px-2 py-2 ${activeSong.activeSongId == track?.track?.hub?.actions[0]?.id && 'bg-navy'}`}
+      className={`w-[calc(100vw-100px)] flex items-center relative gap-2 sm:gap-8 mb-4 mt-4 cursor-pointer hover:bg-navy px-2 py-2 ${activeSong.activeSongId == track?.track?.hub?.actions[0]?.id && 'bg-navy'}`}
     >
         <div className='w-6'>
             {activeSong.activeSongId == songToAdd.id
@@ -47,10 +47,10 @@ const SongElement = ({index, track}) => {
                     : <span className='text-white font-Poppins font-bold text-lg'>{index +1}</span>
             }
         </div>
-        <div className='flex items-center gap-4'>
-            <img className='w-[80px] rounded-lg' src={songToAdd.imageUrl} alt="" />
+        <div className='flex items-center gap-2 sm:gap-4'>
+            <img className='w-[40px] sm:w-[80px] rounded-lg' src={songToAdd.imageUrl} alt="" />
             <div>
-                <p className='text-white font-Poppins font-bold text-lg hover:text-gold sm:text-wrap max-sm:max-w-[180px] text-nowrap overflow-hidden text-ellipsis'>
+                <p className='text-white font-Poppins font-bold text-lg hover:text-gold sm:text-wrap max-sm:max-w-[100px] text-nowrap overflow-hidden text-ellipsis'>
                   <Link to={`/song/${songToAdd.id}`}>{songToAdd.title}</Link>
                 </p>
                 <span className='text-grey font-Poppins hover:text-purpleish '><Link to={`/artist/${songToAdd.artistId}`}>{songToAdd.artist}</Link></span>

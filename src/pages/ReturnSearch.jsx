@@ -21,7 +21,7 @@ const ReturnSearch = () => {
     
     
     return (
-        <div className='px-8 pt-8'>
+        <div className='px-4 sm:px-8 pt-8'>
             <div className='pb-4'>
                 <ul className='flex items-center gap-4'>
                     <li onClick={(e) => setOption(e.target.textContent)} className={`font-Roboto font-bold cursor-pointer ${option == 'Tracks' ? 'text-dullWhite border-b-2 border-dullWhite' : 'text-grey'}`}>Tracks</li>

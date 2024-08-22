@@ -17,7 +17,7 @@ const LatestRelease = () => {
   return (
     <div className=''> 
       <h1 className='font-Roboto text-xl text-white font-semibold mb-4'>Latest Release</h1>
-      <div className='flex gap-4'>
+      <div className='flex flex-col sm:flex-row gap-4'>
         <img className='rounded-xl max-w-[400px]' src={latestRelease.data[0]?.attributes?.artwork?.url.replace("{w}", "200").replace("{h}", "200")} alt="" />
         <section >
           <p className='text-white text-sm font-Poppins font-bold text-nowrap'>{latestRelease.data[0]?.attributes.releaseDate.slice(0,4)}</p>

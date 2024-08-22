@@ -46,7 +46,7 @@ export const Table = ({songs, artistId}) =>{
     }, [playFromAlbum])
     
     return(
-      <div className="max-h-[50vh] sm:max-h-[75vh] overflow-scroll removeScrollbar sm:vertical-scroll">
+      <div className="max-h-[50vh] sm:max-h-[75vh] overflow-scroll removeScrollbar sm:vertical-scroll max-sm:max-w-[calc(100vw-100px)]">
         <TableWrap className='w-full overflow-y-auto table'>
         <TableHeader>
           <TableRow>

@@ -8,7 +8,7 @@ import ArtistElement from './ArtistElement'
 export const ArtistList = ({data}) => {
   // console.log(data)
   return (
-    <div className='mt-4 overflow-scroll removeScrollbar h-[66vh] flex  flex-wrap gap-8'>
+    <div className='mt-4 overflow-scroll removeScrollbar h-[66vh] flex flex-row flex-wrap gap-8'>
       {data.map((artist, index) => <ArtistElement key={index} artist={artist}/>)}
     </div>
   )

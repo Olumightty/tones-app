@@ -157,7 +157,7 @@ const SongBlock = ({song, index, artistId, setPlayFromSongView}) => {
             onMouseLeave={() => setIsHovering(false)} 
             className={`relative max-w-[calc(100vw-100px)] flex justify-around sm:grid grid-cols-2 sm:grid-cols-9 gap-0 md:gap-4 font-Roboto text-grey font-semibold sm:justify-center  text-lg items-center mb-4 mt-4 cursor-pointer hover:bg-navy px-2 sm:px-4 py-2 ${activeSong.activeSongId == song.id && 'bg-navy'}`}
         >
-            <div className=' flex col-span-1 gap-8 sm:gap-2 md:gap-8 sm:col-span-4 items-center max-sm:w-[200px]'>
+            <div className=' flex col-span-1 gap-1  sm:gap-2 md:gap-8 sm:col-span-4 items-center max-sm:w-[200px]'>
                 <div className='w-6'>
                     {activeSong.activeSongId == song?.id
                         ? <MusicPlaying/>
@@ -167,9 +167,9 @@ const SongBlock = ({song, index, artistId, setPlayFromSongView}) => {
                     }
                 </div>
                 <div className='flex items-center gap-4'>
-                    <img className='w-[80px] sm:w-[50px] rounded-lg md:w-[80px]' src={imageUrl} alt="" />
+                    <img className='w-[40px] sm:w-[50px] rounded-lg md:w-[80px]' src={imageUrl} alt="" />
                     <div>
-                        <p className='text-white font-Poppins font-bold text-lg hover:text-gold w-[150px]  sm:w-[200px] text-nowrap  md:w-[200px] lg:w-fit lg:text-wrap overflow-hidden text-ellipsis'>
+                        <p className='text-white font-Poppins font-bold text-lg hover:text-gold w-[100px]  sm:w-[200px] text-nowrap  md:w-[200px] lg:w-fit lg:text-wrap overflow-hidden text-ellipsis'>
                             <Link to={`/song/${song?.id}`}>
                                 {song?.attributes?.name}
                             </Link>
